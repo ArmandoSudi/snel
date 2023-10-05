@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "619414789704",
+    "project_id": "snel-69ae7",
+    "storage_bucket": "snel-69ae7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:619414789704:android:a2e4f4a866c6d6d23a027d",
+        "android_client_info": {
+          "package_name": "com.logiv.snel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjxWMTzjKt4EMq_q65Ey3fMC19BcEmqZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
