@@ -18,7 +18,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   int _selectedIndex = 0;
 
   List pages = [
-    const DashboardPage(),
+    DashboardPage(),
     const PaymentHistoryPage(),
     const UserAccountPage(),
   ];
