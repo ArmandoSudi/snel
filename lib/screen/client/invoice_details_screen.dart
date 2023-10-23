@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:snel/providers/client_provider.dart';
 import 'package:snel/screen/client/payment_screen.dart';
 
 import '../../models/invoice_model.dart';
+import '../../models/client_model.dart';
 
-class InvoiceDetailsScreen extends StatelessWidget {
+class InvoiceDetailsScreen extends ConsumerWidget {
 
   final Invoice invoice;
 
@@ -12,8 +15,12 @@ class InvoiceDetailsScreen extends StatelessWidget {
 
   final db = FirebaseFirestore.instance;
 
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    Client? client = ref.watch(clientProvider);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -41,26 +48,38 @@ class InvoiceDetailsScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        // FACTURE ID
-                        Text(
-                          "FAC 024332452023/18",
-                          style: Theme.of(context).textTheme.headlineSmall,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "No",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey),
+                            ),
+                            Text("${invoice.id}",
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
+                          ],
                         ),
 
                         const SizedBox(height: 10),
 
                         // CLIENT DETAILS
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               "Client",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey),
                             ),
-                            Text("LANDU SUNGU Jeremie",
+                            Text("${client!.name}",
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
@@ -228,9 +247,9 @@ class InvoiceDetailsScreen extends StatelessWidget {
                             flex: 1,
                             child: Text("Total", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey)),
                           ),
-                          const Expanded(
+                          Expanded(
                             flex: 1,
-                            child: Text("14700", style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
+                            child: Text("${invoice.amount - invoice.amount * 0.01}", style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
                           ),
                         ],
                       ),
@@ -250,9 +269,9 @@ class InvoiceDetailsScreen extends StatelessWidget {
                             child: Text("Taxe Provinciale 1%",
                                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey)),
                           ),
-                          const Expanded(
+                          Expanded(
                             flex: 1,
-                            child: Text("294", style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
+                            child: Text("${invoice.amount * 0.01}", style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
                           ),
                         ],
                       ),
@@ -262,7 +281,7 @@ class InvoiceDetailsScreen extends StatelessWidget {
                             flex: 1,
                             child: Container(),
                           ),
-                          Expanded(
+                          const Expanded(
                             flex: 3,
                             child: Divider(),
                           )
@@ -279,11 +298,11 @@ class InvoiceDetailsScreen extends StatelessWidget {
                             flex: 3,
                             child: Text("Montant", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey)),
                           ),
-                          const Expanded(
+                          Expanded(
                             flex: 3,
                             child: Text(
-                              "49 3434,00 CDF",
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                              "${invoice.amount} CDF",
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                             ),
                           )
                         ],
