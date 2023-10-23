@@ -1,24 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:snel/widgets/facture_card.dart';
 
 import '../../models/invoice_model.dart';
 import '../../service/api.dart';
-import 'invoice_details_screen.dart';
+import '../../providers/counter_provider.dart';
 
-class InvoicesScreen extends StatefulWidget {
+class InvoicesScreen extends ConsumerStatefulWidget {
   const InvoicesScreen({super.key});
 
   @override
-  State<InvoicesScreen> createState() => _InvoicesScreenState();
+  _InvoicesScreenState createState() => _InvoicesScreenState();
 }
 
-class _InvoicesScreenState extends State<InvoicesScreen> {
+class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
 
   final _api = API(FirebaseFirestore.instance);
 
   @override
   Widget build(BuildContext context) {
+
+    var selectedCounter = ref.watch(selectedCounterProvider);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -27,29 +31,26 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
           title: const Text("Mes factures"),
           actions: [
             IconButton(
-              icon: Container(
-                // color: Colors.red,
-                child: SizedBox(
-                  height: 35,
-                  width: 35,
-                  child: Stack(
-                    children: [
-                      Icon(Icons.notifications, size: 25),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(4.0),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.red,
-                              border: Border.all(color: Colors.white, width: 2)
-                          ),
-                          child: Text("4", style: TextStyle(fontSize: 10, color: Colors.white),),
+              icon: SizedBox(
+                height: 35,
+                width: 35,
+                child: Stack(
+                  children: [
+                    const Icon(Icons.notifications, size: 25),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4.0),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.red,
+                            border: Border.all(color: Colors.white, width: 2)
                         ),
+                        child: Text("4", style: TextStyle(fontSize: 10, color: Colors.white),),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               onPressed: () {},
@@ -67,22 +68,36 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: StreamBuilder<QuerySnapshot>(
-                  stream: _api.getUnpaidInvoices(),
+                  stream: _api.getInvoicesByCounterId(selectedCounter!.id!),
                   builder: (context, snapshot) {
 
                     if (snapshot.hasError) {
-                      return const Text("something wen wrong");
-                    }
-
-                    if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: Text("Erreur de connection"));
+                    } else if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (!snapshot.hasData) {
-                      return const Text("There is no payment yet");
+                      return Center(child: Text("Erreur de connection"));
                     }
 
-                    print("Invoices :: ${snapshot.data!.docs.length}");
+                    // Filter the list of invoices and display only UNPAID INVOICES
+                    var unpaidInvoices = snapshot
+                        .data!
+                        .docs
+                        .where((element) => element['is_paid'] == false)
+                        .toList();
 
-                    return _buildInvoiceList(context, snapshot.data?.docs ?? []);
+                    if (unpaidInvoices.isEmpty) {
+                      return Center(child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Il n'y a pas des factures à payer pour le compteur"),
+                          Text("no: ${selectedCounter.id}"),
+                          Text("adresse: ${selectedCounter.address}"),
+                        ],
+                      ));
+                    }
+
+                    return _buildInvoiceList(context, unpaidInvoices);
                   }
 
               )
@@ -90,23 +105,38 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: StreamBuilder<QuerySnapshot>(
-                    stream: _api.getPaidInvoices(),
+                    stream: _api.getInvoicesByCounterId(selectedCounter!.id!),
                     builder: (context, snapshot) {
 
                       if (snapshot.hasError) {
-                        return const Text("something wen wrong");
-                      }
-
-                      if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: Text("Erreur de connection"));
+                      } else if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (!snapshot.hasData) {
-                        return const Center(child: Text("There is no payment yet"));
-                      } else if (snapshot.data!.docs.length == 0) {
-                        return const Center(child: Text("Il n'y a pas des factures payées"));
+                        return Center(child: Text("Erreur de connection"));
                       }
-                      print("Unpaid Invoices :: ${snapshot.data!.docs.length}");
 
-                      return _buildInvoiceList(context, snapshot.data?.docs ?? []);
+                      // Filter the list of invoices and display only PAID INVOICES
+                      var paidInvoices = snapshot
+                          .data!
+                          .docs
+                          .where((element) => element['is_paid'] == true)
+                          .toList();
+
+                      if (paidInvoices.isEmpty) {
+                        return Center(child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Il n'y a pas des factures à payer pour le compteur"),
+                            Text("no: ${selectedCounter.id}"),
+                            Text("adresse: ${selectedCounter.address}"),
+                          ],
+                        ));
+                      }
+
+                      print("PAID INVOICE :: $paidInvoices");
+
+                      return _buildInvoiceList(context, paidInvoices);
                     }
 
                 )
@@ -126,8 +156,6 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
   Widget _buildInvoice(BuildContext context, DocumentSnapshot data) {
     // final Invoice invoice = Invoice.fromJson(data.data() as Map<String, dynamic>);
     final Invoice invoice = Invoice.fromDocument(data);
-
-    print("Invoice ID ::: ${invoice.id}");
 
     return FactureCard(invoice);
   }

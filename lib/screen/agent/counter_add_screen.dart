@@ -27,7 +27,7 @@ class _CounterAddScreenState extends State<CounterAddScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Enregistrer nouveau compteur"),),
+        title: const Text("Enregistrer nouveau compteur"),),
       body: Stack(
         children: [
           Padding(
@@ -36,19 +36,19 @@ class _CounterAddScreenState extends State<CounterAddScreen> {
               child: Column(
                 children: [
                   TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         labelText: "Adresse",
                         hintText: "Adresse du compteur"),
                     controller: addresseController,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         labelText: "Catégorie",
                         hintText: "catégorie du compteur"),
                     controller: categoryController,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
@@ -87,5 +87,22 @@ class _CounterAddScreenState extends State<CounterAddScreen> {
         ],
       ),
     );
+  }
+
+  createCounter() async {
+    Counter counter = Counter(
+      address: addresseController.text,
+      category: categoryController.text,
+      clientId: widget.clientID,
+    );
+
+    var counterRef = await _api.createCounter(counter);
+    Counter counterWithId = counter.copyWith(id: counterRef.id);
+
+    log("Counter with id :: ${counterWithId}");
+
+    _api.addCounterToClient(widget.clientID, counterWithId);
+
+    log("Counter Reference :: ${counterRef.id}");
   }
 }

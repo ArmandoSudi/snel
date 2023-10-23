@@ -16,10 +16,11 @@ class LoadingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef widgetRef) {
 
     final _api = API(FirebaseFirestore.instance);
+    final numeros = ["+24389568659", "+243815509291"];
 
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
-          stream: _api.getClientByPhone("+243815509291"),
+          stream: _api.getClientByPhone(numeros.last),
           builder: (context, snapshot) {
 
             if (snapshot.hasError) {
