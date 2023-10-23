@@ -20,11 +20,14 @@ Client _$ClientFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Client {
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get sexe => throw _privateConstructorUsedError;
   @JsonKey(name: 'phone_number')
   String get phoneNumber => throw _privateConstructorUsedError;
-  List<String> get compteurs => throw _privateConstructorUsedError;
+  List<Map<String, dynamic>> get compteurs =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,10 +40,11 @@ abstract class $ClientCopyWith<$Res> {
       _$ClientCopyWithImpl<$Res, Client>;
   @useResult
   $Res call(
-      {String name,
+      {@JsonKey(includeFromJson: false, includeToJson: false) String? id,
+      String name,
       String sexe,
       @JsonKey(name: 'phone_number') String phoneNumber,
-      List<String> compteurs});
+      List<Map<String, dynamic>> compteurs});
 }
 
 /// @nodoc
@@ -56,12 +60,17 @@ class _$ClientCopyWithImpl<$Res, $Val extends Client>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? name = null,
     Object? sexe = null,
     Object? phoneNumber = null,
     Object? compteurs = null,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -77,7 +86,7 @@ class _$ClientCopyWithImpl<$Res, $Val extends Client>
       compteurs: null == compteurs
           ? _value.compteurs
           : compteurs // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Map<String, dynamic>>,
     ) as $Val);
   }
 }
@@ -90,10 +99,11 @@ abstract class _$$ClientImplCopyWith<$Res> implements $ClientCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String name,
+      {@JsonKey(includeFromJson: false, includeToJson: false) String? id,
+      String name,
       String sexe,
       @JsonKey(name: 'phone_number') String phoneNumber,
-      List<String> compteurs});
+      List<Map<String, dynamic>> compteurs});
 }
 
 /// @nodoc
@@ -107,12 +117,17 @@ class __$$ClientImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? name = null,
     Object? sexe = null,
     Object? phoneNumber = null,
     Object? compteurs = null,
   }) {
     return _then(_$ClientImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -128,7 +143,7 @@ class __$$ClientImplCopyWithImpl<$Res>
       compteurs: null == compteurs
           ? _value._compteurs
           : compteurs // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Map<String, dynamic>>,
     ));
   }
 }
@@ -137,15 +152,19 @@ class __$$ClientImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ClientImpl implements _Client {
   const _$ClientImpl(
-      {required this.name,
+      {@JsonKey(includeFromJson: false, includeToJson: false) this.id,
+      required this.name,
       required this.sexe,
       @JsonKey(name: 'phone_number') required this.phoneNumber,
-      required final List<String> compteurs})
+      required final List<Map<String, dynamic>> compteurs})
       : _compteurs = compteurs;
 
   factory _$ClientImpl.fromJson(Map<String, dynamic> json) =>
       _$$ClientImplFromJson(json);
 
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final String? id;
   @override
   final String name;
   @override
@@ -153,9 +172,9 @@ class _$ClientImpl implements _Client {
   @override
   @JsonKey(name: 'phone_number')
   final String phoneNumber;
-  final List<String> _compteurs;
+  final List<Map<String, dynamic>> _compteurs;
   @override
-  List<String> get compteurs {
+  List<Map<String, dynamic>> get compteurs {
     if (_compteurs is EqualUnmodifiableListView) return _compteurs;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_compteurs);
@@ -163,7 +182,7 @@ class _$ClientImpl implements _Client {
 
   @override
   String toString() {
-    return 'Client(name: $name, sexe: $sexe, phoneNumber: $phoneNumber, compteurs: $compteurs)';
+    return 'Client(id: $id, name: $name, sexe: $sexe, phoneNumber: $phoneNumber, compteurs: $compteurs)';
   }
 
   @override
@@ -171,6 +190,7 @@ class _$ClientImpl implements _Client {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ClientImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.sexe, sexe) || other.sexe == sexe) &&
             (identical(other.phoneNumber, phoneNumber) ||
@@ -181,7 +201,7 @@ class _$ClientImpl implements _Client {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, sexe, phoneNumber,
+  int get hashCode => Object.hash(runtimeType, id, name, sexe, phoneNumber,
       const DeepCollectionEquality().hash(_compteurs));
 
   @JsonKey(ignore: true)
@@ -200,13 +220,17 @@ class _$ClientImpl implements _Client {
 
 abstract class _Client implements Client {
   const factory _Client(
-      {required final String name,
+      {@JsonKey(includeFromJson: false, includeToJson: false) final String? id,
+      required final String name,
       required final String sexe,
       @JsonKey(name: 'phone_number') required final String phoneNumber,
-      required final List<String> compteurs}) = _$ClientImpl;
+      required final List<Map<String, dynamic>> compteurs}) = _$ClientImpl;
 
   factory _Client.fromJson(Map<String, dynamic> json) = _$ClientImpl.fromJson;
 
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? get id;
   @override
   String get name;
   @override
@@ -215,7 +239,7 @@ abstract class _Client implements Client {
   @JsonKey(name: 'phone_number')
   String get phoneNumber;
   @override
-  List<String> get compteurs;
+  List<Map<String, dynamic>> get compteurs;
   @override
   @JsonKey(ignore: true)
   _$$ClientImplCopyWith<_$ClientImpl> get copyWith =>

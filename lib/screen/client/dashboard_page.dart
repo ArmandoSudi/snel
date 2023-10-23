@@ -1,21 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:snel/models/agent_model.dart';
-import 'package:snel/users/screens/invoices_screen.dart';
-import 'package:snel/users/screens/power_reading_screen.dart';
+import 'package:snel/screen/client/power_reading_screen.dart';
 
+import '../../providers/counter_provider.dart';
 import '../../service/api.dart';
+import 'invoices_screen.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends ConsumerWidget {
   DashboardPage({super.key});
 
   final db = FirebaseFirestore.instance;
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
 
     var api = API(db);
+    var counter = ref.watch(selectedCounterProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -40,8 +43,8 @@ class DashboardPage extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                title: const Text('Immeuble Huilerie'),
-                subtitle: const Text("C. Ngaliema, Kinshasa"),
+                title: Text(counter?.id ?? "no address selected" ),
+                subtitle: Text(counter?.address ?? "no address selected" ),
                 onTap: () async {
 
                   // Add a new document with a generated ID
@@ -50,7 +53,6 @@ class DashboardPage extends StatelessWidget {
                       .get()
                       .then((value){
                         var agent = Agent.fromJson(value.data()!);
-
                         print("Agent:: $agent");
                   });
 
@@ -146,4 +148,5 @@ class DashboardPage extends StatelessWidget {
       ),
     );
   }
+
 }

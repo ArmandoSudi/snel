@@ -1,9 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:snel/users/screens/payment_screen.dart';
+import 'package:snel/screen/client/payment_screen.dart';
+
+import '../../models/invoice_model.dart';
 
 class InvoiceDetailsScreen extends StatelessWidget {
-  InvoiceDetailsScreen({super.key});
+
+  final Invoice invoice;
+
+  InvoiceDetailsScreen(this.invoice, {super.key});
 
   final db = FirebaseFirestore.instance;
 
@@ -12,7 +17,7 @@ class InvoiceDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: const Text("Facture"),
+        title: const Text("Ma Facture"),
         actions: const [
           IconButton(
             onPressed: null,
@@ -65,18 +70,18 @@ class InvoiceDetailsScreen extends StatelessWidget {
                         const SizedBox(height: 10),
 
                         // NUMERO COMPTEUR
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               "No compteur",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey),
                             ),
-                            Text("109226772",
-                                style: TextStyle(
+                            Text(invoice.counterId,
+                                style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black)),
@@ -85,18 +90,18 @@ class InvoiceDetailsScreen extends StatelessWidget {
                         const SizedBox(height: 10),
 
                         // PERIODE DE FACTURATION
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               "Période",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey),
                             ),
-                            Text("Janvier 2023",
-                                style: TextStyle(
+                            Text(invoice.period,
+                                style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black)),
@@ -303,7 +308,7 @@ class InvoiceDetailsScreen extends StatelessWidget {
                   backgroundColor: Colors.blue,
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => PaymentScreen()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => PaymentScreen(invoice)));
                 },
                 child: Text("Payer")),
           ),

@@ -20,8 +20,12 @@ Counter _$CounterFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Counter {
+  @JsonKey(includeFromJson: false, includeToJson: true)
+  String? get id => throw _privateConstructorUsedError;
   String get address => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
+  @JsonKey(name: 'client_id')
+  String get clientId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -33,7 +37,11 @@ abstract class $CounterCopyWith<$Res> {
   factory $CounterCopyWith(Counter value, $Res Function(Counter) then) =
       _$CounterCopyWithImpl<$Res, Counter>;
   @useResult
-  $Res call({String address, String category});
+  $Res call(
+      {@JsonKey(includeFromJson: false, includeToJson: true) String? id,
+      String address,
+      String category,
+      @JsonKey(name: 'client_id') String clientId});
 }
 
 /// @nodoc
@@ -49,10 +57,16 @@ class _$CounterCopyWithImpl<$Res, $Val extends Counter>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? address = null,
     Object? category = null,
+    Object? clientId = null,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       address: null == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
@@ -60,6 +74,10 @@ class _$CounterCopyWithImpl<$Res, $Val extends Counter>
       category: null == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      clientId: null == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -72,7 +90,11 @@ abstract class _$$CounterImplCopyWith<$Res> implements $CounterCopyWith<$Res> {
       __$$CounterImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String address, String category});
+  $Res call(
+      {@JsonKey(includeFromJson: false, includeToJson: true) String? id,
+      String address,
+      String category,
+      @JsonKey(name: 'client_id') String clientId});
 }
 
 /// @nodoc
@@ -86,10 +108,16 @@ class __$$CounterImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? address = null,
     Object? category = null,
+    Object? clientId = null,
   }) {
     return _then(_$CounterImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       address: null == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
@@ -98,6 +126,10 @@ class __$$CounterImplCopyWithImpl<$Res>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
+      clientId: null == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -105,19 +137,29 @@ class __$$CounterImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$CounterImpl implements _Counter {
-  const _$CounterImpl({required this.address, required this.category});
+  const _$CounterImpl(
+      {@JsonKey(includeFromJson: false, includeToJson: true) this.id,
+      required this.address,
+      required this.category,
+      @JsonKey(name: 'client_id') required this.clientId});
 
   factory _$CounterImpl.fromJson(Map<String, dynamic> json) =>
       _$$CounterImplFromJson(json);
 
   @override
+  @JsonKey(includeFromJson: false, includeToJson: true)
+  final String? id;
+  @override
   final String address;
   @override
   final String category;
+  @override
+  @JsonKey(name: 'client_id')
+  final String clientId;
 
   @override
   String toString() {
-    return 'Counter(address: $address, category: $category)';
+    return 'Counter(id: $id, address: $address, category: $category, clientId: $clientId)';
   }
 
   @override
@@ -125,14 +167,17 @@ class _$CounterImpl implements _Counter {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CounterImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.address, address) || other.address == address) &&
             (identical(other.category, category) ||
-                other.category == category));
+                other.category == category) &&
+            (identical(other.clientId, clientId) ||
+                other.clientId == clientId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, address, category);
+  int get hashCode => Object.hash(runtimeType, id, address, category, clientId);
 
   @JsonKey(ignore: true)
   @override
@@ -150,15 +195,24 @@ class _$CounterImpl implements _Counter {
 
 abstract class _Counter implements Counter {
   const factory _Counter(
-      {required final String address,
-      required final String category}) = _$CounterImpl;
+      {@JsonKey(includeFromJson: false, includeToJson: true) final String? id,
+      required final String address,
+      required final String category,
+      @JsonKey(name: 'client_id')
+      required final String clientId}) = _$CounterImpl;
 
   factory _Counter.fromJson(Map<String, dynamic> json) = _$CounterImpl.fromJson;
 
   @override
+  @JsonKey(includeFromJson: false, includeToJson: true)
+  String? get id;
+  @override
   String get address;
   @override
   String get category;
+  @override
+  @JsonKey(name: 'client_id')
+  String get clientId;
   @override
   @JsonKey(ignore: true)
   _$$CounterImplCopyWith<_$CounterImpl> get copyWith =>

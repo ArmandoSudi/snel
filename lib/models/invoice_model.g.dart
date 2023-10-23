@@ -8,8 +8,8 @@ part of 'invoice_model.dart';
 
 _$InvoiceImpl _$$InvoiceImplFromJson(Map<String, dynamic> json) =>
     _$InvoiceImpl(
-      amount: json['amount'] as String,
-      counter: json['counter'] as String,
+      amount: json['amount'] as int,
+      counterId: json['counter_id'] as String,
       currency: json['currency'] as String,
       isPaid: json['is_paid'] as bool,
       period: json['period'] as String,
@@ -18,7 +18,7 @@ _$InvoiceImpl _$$InvoiceImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$InvoiceImplToJson(_$InvoiceImpl instance) =>
     <String, dynamic>{
       'amount': instance.amount,
-      'counter': instance.counter,
+      'counter_id': instance.counterId,
       'currency': instance.currency,
       'is_paid': instance.isPaid,
       'period': instance.period,

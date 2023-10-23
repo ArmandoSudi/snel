@@ -1,22 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/payment_model.dart';
+import '../../providers/counter_provider.dart';
 import '../../service/api.dart';
 
-class PaymentHistoryPage extends StatefulWidget {
+class PaymentHistoryPage extends ConsumerStatefulWidget {
   const PaymentHistoryPage({super.key});
 
   @override
-  State<PaymentHistoryPage> createState() => _PaymentHistoryPageState();
+  _PaymentHistoryPageState createState() => _PaymentHistoryPageState();
 }
 
-class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
+class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
 
   final _api = API(FirebaseFirestore.instance);
 
+
   @override
   Widget build(BuildContext context) {
+
+    var counter = ref.watch(selectedCounterProvider);
 
     return Scaffold(
         appBar: AppBar(
@@ -55,13 +60,16 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
           ],
         ),
         body: SafeArea(
-          child: PaymentList(),
+          child: PaymentList(counter!.id),
         ));
   }
 
-  Widget PaymentList() {
+  Widget PaymentList(String? counterId) {
+
+    print("Payment for ==> $counterId");
+
     return StreamBuilder<QuerySnapshot>(
-        stream: _api.getPayments(),
+        stream: _api.getPaymentsByCompteurId(counterId!),
         builder: (context, snapshot) {
 
           if (snapshot.hasError) {

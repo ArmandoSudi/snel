@@ -20,8 +20,11 @@ Invoice _$InvoiceFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Invoice {
-  String get amount => throw _privateConstructorUsedError;
-  String get counter => throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? get id => throw _privateConstructorUsedError;
+  int get amount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'counter_id')
+  String get counterId => throw _privateConstructorUsedError;
   String get currency => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_paid')
   bool get isPaid => throw _privateConstructorUsedError;
@@ -38,8 +41,9 @@ abstract class $InvoiceCopyWith<$Res> {
       _$InvoiceCopyWithImpl<$Res, Invoice>;
   @useResult
   $Res call(
-      {String amount,
-      String counter,
+      {@JsonKey(includeFromJson: false, includeToJson: false) String? id,
+      int amount,
+      @JsonKey(name: 'counter_id') String counterId,
       String currency,
       @JsonKey(name: 'is_paid') bool isPaid,
       String period});
@@ -58,20 +62,25 @@ class _$InvoiceCopyWithImpl<$Res, $Val extends Invoice>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? amount = null,
-    Object? counter = null,
+    Object? counterId = null,
     Object? currency = null,
     Object? isPaid = null,
     Object? period = null,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       amount: null == amount
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
-              as String,
-      counter: null == counter
-          ? _value.counter
-          : counter // ignore: cast_nullable_to_non_nullable
+              as int,
+      counterId: null == counterId
+          ? _value.counterId
+          : counterId // ignore: cast_nullable_to_non_nullable
               as String,
       currency: null == currency
           ? _value.currency
@@ -97,8 +106,9 @@ abstract class _$$InvoiceImplCopyWith<$Res> implements $InvoiceCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String amount,
-      String counter,
+      {@JsonKey(includeFromJson: false, includeToJson: false) String? id,
+      int amount,
+      @JsonKey(name: 'counter_id') String counterId,
       String currency,
       @JsonKey(name: 'is_paid') bool isPaid,
       String period});
@@ -115,20 +125,25 @@ class __$$InvoiceImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? amount = null,
-    Object? counter = null,
+    Object? counterId = null,
     Object? currency = null,
     Object? isPaid = null,
     Object? period = null,
   }) {
     return _then(_$InvoiceImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       amount: null == amount
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
-              as String,
-      counter: null == counter
-          ? _value.counter
-          : counter // ignore: cast_nullable_to_non_nullable
+              as int,
+      counterId: null == counterId
+          ? _value.counterId
+          : counterId // ignore: cast_nullable_to_non_nullable
               as String,
       currency: null == currency
           ? _value.currency
@@ -148,21 +163,27 @@ class __$$InvoiceImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$InvoiceImpl implements _Invoice {
+class _$InvoiceImpl extends _Invoice {
   const _$InvoiceImpl(
-      {required this.amount,
-      required this.counter,
+      {@JsonKey(includeFromJson: false, includeToJson: false) this.id,
+      required this.amount,
+      @JsonKey(name: 'counter_id') required this.counterId,
       required this.currency,
       @JsonKey(name: 'is_paid') required this.isPaid,
-      required this.period});
+      required this.period})
+      : super._();
 
   factory _$InvoiceImpl.fromJson(Map<String, dynamic> json) =>
       _$$InvoiceImplFromJson(json);
 
   @override
-  final String amount;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final String? id;
   @override
-  final String counter;
+  final int amount;
+  @override
+  @JsonKey(name: 'counter_id')
+  final String counterId;
   @override
   final String currency;
   @override
@@ -173,7 +194,7 @@ class _$InvoiceImpl implements _Invoice {
 
   @override
   String toString() {
-    return 'Invoice(amount: $amount, counter: $counter, currency: $currency, isPaid: $isPaid, period: $period)';
+    return 'Invoice(id: $id, amount: $amount, counterId: $counterId, currency: $currency, isPaid: $isPaid, period: $period)';
   }
 
   @override
@@ -181,8 +202,10 @@ class _$InvoiceImpl implements _Invoice {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$InvoiceImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.amount, amount) || other.amount == amount) &&
-            (identical(other.counter, counter) || other.counter == counter) &&
+            (identical(other.counterId, counterId) ||
+                other.counterId == counterId) &&
             (identical(other.currency, currency) ||
                 other.currency == currency) &&
             (identical(other.isPaid, isPaid) || other.isPaid == isPaid) &&
@@ -192,7 +215,7 @@ class _$InvoiceImpl implements _Invoice {
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, amount, counter, currency, isPaid, period);
+      Object.hash(runtimeType, id, amount, counterId, currency, isPaid, period);
 
   @JsonKey(ignore: true)
   @override
@@ -208,20 +231,26 @@ class _$InvoiceImpl implements _Invoice {
   }
 }
 
-abstract class _Invoice implements Invoice {
+abstract class _Invoice extends Invoice {
   const factory _Invoice(
-      {required final String amount,
-      required final String counter,
+      {@JsonKey(includeFromJson: false, includeToJson: false) final String? id,
+      required final int amount,
+      @JsonKey(name: 'counter_id') required final String counterId,
       required final String currency,
       @JsonKey(name: 'is_paid') required final bool isPaid,
       required final String period}) = _$InvoiceImpl;
+  const _Invoice._() : super._();
 
   factory _Invoice.fromJson(Map<String, dynamic> json) = _$InvoiceImpl.fromJson;
 
   @override
-  String get amount;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? get id;
   @override
-  String get counter;
+  int get amount;
+  @override
+  @JsonKey(name: 'counter_id')
+  String get counterId;
   @override
   String get currency;
   @override
