@@ -140,7 +140,7 @@ class API {
 
   // Set the isPaid parameter of invoice to true
   Future<void> setPaidInvoice(Invoice invoice) {
-    createPayment(invoice.counterId!);
+    createPayment(invoice);
     return _firebase
         .collection('invoices')
         .doc(invoice.id)
@@ -148,10 +148,10 @@ class API {
   }
 
   // Create an payment on firestore for the given invoice
-  Future<void> createPayment(String invoiceId) {
+  Future<void> createPayment(Invoice invoice) {
     final payment = Payment(
-      counter: invoiceId,
-      amount: 0,
+      counter: invoice.counterId,
+      amount: invoice.amount,
       currency: 'CDF',
       date: DateTime.now(),
     );

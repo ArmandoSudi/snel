@@ -30,6 +30,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   var paymentMethod = PaymentMethod.mpesa;
   final _api = API(FirebaseFirestore.instance);
   final _smsAPI = SMSService();
+  bool isPaying = false;
 
   @override
   Widget build(BuildContext context) {
@@ -174,6 +175,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   (paymentMethod == PaymentMethod.visa)
                       ? bankPayment()
                       : mobilePayment(),
+                  const SizedBox(height: 20),
+                  isPaying ? const CircularProgressIndicator() : Container(),
+                  const SizedBox(height: 10),
+                  isPaying ? const Text("Paiement en cours de traitement", ) : Container(),
                 ],
               ),
             ),
@@ -189,7 +194,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.blue,
                     ),
-                    onPressed: _showAlertDialog,
+                    onPressed: isPaying ? null : _showAlertDialog,
                     child: Text("Continuer")),
               ),
             )
@@ -250,7 +255,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Future<void> _showAlertDialog() async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog( // <-- SEE HERE
           title: const Text('Confirmation de paiement'),
@@ -270,8 +275,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             TextButton(
               child: const Text('Oui'),
-              onPressed: () {
-                payInvoice(widget.invoice);
+              onPressed: () async {
+
+                setState(() {
+                  isPaying = true;
+                });
+
+                var message = payInvoice(widget.invoice);
+
+                Navigator.of(context).pop();
+
+                showSnackBar(message);
+
+                Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
             ),
@@ -282,12 +298,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   // Pay invoice, set isPaid to true and create a payment in firestore
-  void payInvoice(Invoice invoice) async {
+  Future<String> payInvoice(Invoice invoice) async {
     // set invoice isPaid to true
     await _api.setPaidInvoice(invoice);
     var message = await _smsAPI.sendSMS(_phoneController.text, "Votre facture ${invoice.id} a été payée avec succès");
-    log("counter invoice message:: $message");
 
+    return message;
+  }
+
+  void showSnackBar(dynamic message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Paiement effectué avec succès")));
   }
 
 }

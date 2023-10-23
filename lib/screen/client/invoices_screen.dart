@@ -90,7 +90,7 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
                       return Center(child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Il n'y a pas des factures à payer pour le compteur"),
+                          Text("Il n'y a pas de factures à payer pour le compteur"),
                           Text("no: ${selectedCounter.id}"),
                           Text("adresse: ${selectedCounter.address}"),
                         ],
@@ -127,7 +127,7 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
                         return Center(child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("Il n'y a pas des factures à payer pour le compteur"),
+                            Text("Il n'y a pas de factures à payer pour le compteur"),
                             Text("no: ${selectedCounter.id}"),
                             Text("adresse: ${selectedCounter.address}"),
                           ],

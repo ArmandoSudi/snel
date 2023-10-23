@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../models/counter_model.dart';
 import '../../models/payment_model.dart';
 import '../../providers/counter_provider.dart';
 import '../../service/api.dart';
@@ -14,18 +15,16 @@ class PaymentHistoryPage extends ConsumerStatefulWidget {
 }
 
 class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
-
   final _api = API(FirebaseFirestore.instance);
-
 
   @override
   Widget build(BuildContext context) {
-
     var counter = ref.watch(selectedCounterProvider);
 
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(icon: Icon(Icons.menu),
+          leading: IconButton(
+              icon: Icon(Icons.menu),
               onPressed: () => Scaffold.of(context).openDrawer()),
           title: const Text("Historique des paiements"),
           actions: [
@@ -44,10 +43,11 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.red,
-                            border: Border.all(color: Colors.white, width: 2)
+                            border: Border.all(color: Colors.white, width: 2)),
+                        child: const Text(
+                          "4",
+                          style: TextStyle(fontSize: 10, color: Colors.white),
                         ),
-                        child: const Text("4", style: TextStyle(fontSize: 10,
-                            color: Colors.white),),
                       ),
                     ),
                   ],
@@ -60,36 +60,43 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
           ],
         ),
         body: SafeArea(
-          child: PaymentList(counter!.id),
+          child: PaymentList(counter),
         ));
   }
 
-  Widget PaymentList(String? counterId) {
-
-    print("Payment for ==> $counterId");
-
+  Widget PaymentList(Counter? counter) {
     return StreamBuilder<QuerySnapshot>(
-        stream: _api.getPaymentsByCompteurId(counterId!),
+        stream: _api.getPaymentsByCompteurId(counter!.id!),
         builder: (context, snapshot) {
-
           if (snapshot.hasError) {
             return const Text("something wen wrong");
           }
 
-          if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.data == null ||
+              snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (!snapshot.hasData) {
-            return const Text("There is no payment yet");
+            return const Text("Erreur de connection");
+          }
+
+          if (snapshot.data!.docs.isEmpty) {
+            return Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Il n'y a pas de reçu à payer pour le compteur"),
+                Text("no: ${counter.id}"),
+                Text("adresse: ${counter.address}"),
+              ],
+            ));
           }
 
           return _buildPaymentList(context, snapshot.data?.docs ?? []);
-        }
-
-    )
-    ;
+        });
   }
 
-  Widget _buildPaymentList( BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget _buildPaymentList(
+      BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
       children: snapshot.map((data) => _buildPayment(context, data)).toList(),
     );
@@ -97,7 +104,8 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
 
   Widget _buildPayment(BuildContext context, DocumentSnapshot data) {
     print("Data: ${data.data()}");
-    final Payment payment = Payment.fromJson(data.data() as Map<String, dynamic>);
+    final Payment payment =
+        Payment.fromJson(data.data() as Map<String, dynamic>);
     return ListTile(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,22 +114,47 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
           Text("${payment.amount} ${payment.currency}"),
         ],
       ),
-      subtitle: Text("${payment.date.day}/${payment.date.month}/${payment.date.year}"),
+      subtitle: Text(
+          "${payment.date.day}/${payment.date.month}/${payment.date.year}"),
+      trailing: IconButton(
+        icon: Icon(Icons.download),
+        onPressed: () {
+          debugPrint("Download");
+        },
+      ),
       onTap: () {
-
         debugPrint("Doc ID: ${payment}");
-
       },
     );
   }
 
-  void populatePayment(){
+  void populatePayment() {
     List<Payment> payment = [];
-    payment.add(Payment(counter: "COMP2234/234", amount: 23423, date: DateTime.now(), currency: 'CDF'));
-    payment.add(Payment(counter: "COMP2234/235", amount: 8594, date: DateTime.now(), currency: 'CDF'));
-    payment.add(Payment(counter: "COMP2234/236", amount: 5849, date: DateTime.now(), currency: 'CDF'));
-    payment.add(Payment(counter: "COMP2234/237", amount: 2938, date: DateTime.now(), currency: 'CDF'));
-    payment.add(Payment(counter: "COMP2234/238", amount: 19384, date: DateTime.now(), currency: 'CDF'));
+    payment.add(Payment(
+        counter: "COMP2234/234",
+        amount: 23423,
+        date: DateTime.now(),
+        currency: 'CDF'));
+    payment.add(Payment(
+        counter: "COMP2234/235",
+        amount: 8594,
+        date: DateTime.now(),
+        currency: 'CDF'));
+    payment.add(Payment(
+        counter: "COMP2234/236",
+        amount: 5849,
+        date: DateTime.now(),
+        currency: 'CDF'));
+    payment.add(Payment(
+        counter: "COMP2234/237",
+        amount: 2938,
+        date: DateTime.now(),
+        currency: 'CDF'));
+    payment.add(Payment(
+        counter: "COMP2234/238",
+        amount: 19384,
+        date: DateTime.now(),
+        currency: 'CDF'));
 
     for (var item in payment) {
       _api.savePayment(item);
