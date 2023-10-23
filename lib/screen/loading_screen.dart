@@ -35,7 +35,7 @@ class LoadingScreen extends ConsumerWidget {
 
             Client client = Client.fromDocument(snapshot.data!.docs.first);
             List<Counter> counters = client.compteurs.map((e) {
-              e.addAll({"category": "not defined", "client_id": client.id });
+              e.addAll({"client_id": client.id });
               return Counter.fromJson(e).copyWith(id: e["id"]);
             }).toList();
 

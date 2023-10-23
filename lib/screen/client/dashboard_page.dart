@@ -19,6 +19,7 @@ class DashboardPage extends ConsumerWidget {
 
     var api = API(db);
     var counter = ref.watch(selectedCounterProvider);
+    print("COUNER ==> $counter");
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +45,13 @@ class DashboardPage extends ConsumerWidget {
                   ),
                 ),
                 title: Text(counter?.id ?? "no address selected" ),
-                subtitle: Text(counter?.address ?? "no address selected" ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(counter?.category ?? "no address selected" ),
+                    Text(counter?.address ?? "no address selected" ),
+                  ],
+                ),
                 onTap: () async {
 
                   // Add a new document with a generated ID
