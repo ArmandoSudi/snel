@@ -15,12 +15,10 @@ class InvoicesScreen extends ConsumerStatefulWidget {
 }
 
 class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
-
   final _api = API(FirebaseFirestore.instance);
 
   @override
   Widget build(BuildContext context) {
-
     var selectedCounter = ref.watch(selectedCounterProvider);
 
     return DefaultTabController(
@@ -45,9 +43,11 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.red,
-                            border: Border.all(color: Colors.white, width: 2)
+                            border: Border.all(color: Colors.white, width: 2)),
+                        child: Text(
+                          "4",
+                          style: TextStyle(fontSize: 10, color: Colors.white),
                         ),
-                        child: Text("4", style: TextStyle(fontSize: 10, color: Colors.white),),
                       ),
                     ),
                   ],
@@ -66,70 +66,112 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
         body: TabBarView(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: _api.getInvoicesByCounterId(selectedCounter!.id!),
-                  builder: (context, snapshot) {
+                padding: const EdgeInsets.all(8.0),
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: _api.getInvoicesByCounterId(selectedCounter!.id!),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const Center(
+                            child: Text("Erreur de connection"));
+                      } else if (snapshot.data == null ||
+                          snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (!snapshot.hasData) {
+                        return Center(child: Text("Erreur de connection"));
+                      }
 
-                    if (snapshot.hasError) {
-                      return const Center(child: Text("Erreur de connection"));
-                    } else if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (!snapshot.hasData) {
-                      return Center(child: Text("Erreur de connection"));
-                    }
+                      // Filter the list of invoices and display only UNPAID INVOICES
+                      var unpaidInvoices = snapshot.data!.docs
+                          .where((element) => element['is_paid'] == false)
+                          .toList();
 
-                    // Filter the list of invoices and display only UNPAID INVOICES
-                    var unpaidInvoices = snapshot
-                        .data!
-                        .docs
-                        .where((element) => element['is_paid'] == false)
-                        .toList();
+                      if (unpaidInvoices.isEmpty) {
+                        return Center(
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                                "Il n'y a pas de factures à payer pour le compteur",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue[200],
+                              ),
+                            ),
+                            Text("no: ${selectedCounter.id}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue[200],
+                              ),
+                            ),
+                            Text("adresse: ${selectedCounter.address}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue[200],
+                              ),
+                            ),
+                          ],
+                        ));
+                      }
 
-                    if (unpaidInvoices.isEmpty) {
-                      return Center(child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Il n'y a pas de factures à payer pour le compteur"),
-                          Text("no: ${selectedCounter.id}"),
-                          Text("adresse: ${selectedCounter.address}"),
-                        ],
-                      ));
-                    }
-
-                    return _buildInvoiceList(context, unpaidInvoices);
-                  }
-
-              )
-            ),
+                      return _buildInvoiceList(context, unpaidInvoices);
+                    })),
             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: StreamBuilder<QuerySnapshot>(
                     stream: _api.getInvoicesByCounterId(selectedCounter!.id!),
                     builder: (context, snapshot) {
-
                       if (snapshot.hasError) {
-                        return const Center(child: Text("Erreur de connection"));
-                      } else if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                            child: Text("Erreur de connection"));
+                      } else if (snapshot.data == null ||
+                          snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (!snapshot.hasData) {
                         return Center(child: Text("Erreur de connection"));
                       }
 
                       // Filter the list of invoices and display only PAID INVOICES
-                      var paidInvoices = snapshot
-                          .data!
-                          .docs
+                      var paidInvoices = snapshot.data!.docs
                           .where((element) => element['is_paid'] == true)
                           .toList();
 
                       if (paidInvoices.isEmpty) {
-                        return Center(child: Column(
+                        return Center(
+                            child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("Il n'y a pas de factures à payer pour le compteur"),
-                            Text("no: ${selectedCounter.id}"),
-                            Text("adresse: ${selectedCounter.address}"),
+                            Text(
+                              "Il n'y a pas de factures à payer pour le compteur",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue[200],
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text("NO: ${selectedCounter.id}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue[200],
+                              ),
+                            ),
+                            Text("Adresse: ${selectedCounter.address}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue[200],
+                              ),
+                            ),
                           ],
                         ));
                       }
@@ -137,17 +179,15 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
                       print("PAID INVOICE :: $paidInvoices");
 
                       return _buildInvoiceList(context, paidInvoices);
-                    }
-
-                )
-            ),
+                    })),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildInvoiceList( BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget _buildInvoiceList(
+      BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
       children: snapshot.map((data) => _buildInvoice(context, data)).toList(),
     );

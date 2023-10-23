@@ -84,9 +84,30 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Il n'y a pas de reçu à payer pour le compteur"),
-                Text("no: ${counter.id}"),
-                Text("adresse: ${counter.address}"),
+                Text("Il n'y a pas de reçu pour le compteur",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[200],
+                  ),
+                ),
+                Text("no: ${counter.id}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[200],
+                  ),
+                ),
+                Text("adresse: ${counter.address}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[200],
+                  ),
+                ),
               ],
             ));
           }
