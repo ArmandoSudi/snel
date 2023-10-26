@@ -1,11 +1,16 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pdf/pdf.dart';
 import 'package:snel/providers/client_provider.dart';
 import 'package:snel/screen/client/payment_screen.dart';
 
 import '../../models/invoice_model.dart';
 import '../../models/client_model.dart';
+import '../../service/pdf_api.dart';
+import '../../service/pdf_invoice_api.dart';
 
 class InvoiceDetailsScreen extends ConsumerWidget {
 
@@ -25,9 +30,12 @@ class InvoiceDetailsScreen extends ConsumerWidget {
       appBar: AppBar(
         centerTitle: false,
         title: const Text("Ma Facture"),
-        actions: const [
+        actions: [
           IconButton(
-            onPressed: null,
+            onPressed: () async {
+              final pdfFile = await PdfInvoiceApi.generateInvoice(invoice);
+              PdfApi.openFile(pdfFile);
+            },
             icon: Icon(Icons.download),
           )
         ],
