@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'dart:io';
+import 'package:pdf/widgets.dart' as pw;
+
 import '../../models/counter_model.dart';
 import '../../models/payment_model.dart';
 import '../../providers/counter_provider.dart';
@@ -139,8 +142,9 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
           "${payment.date.day}/${payment.date.month}/${payment.date.year}"),
       trailing: IconButton(
         icon: Icon(Icons.download),
-        onPressed: () {
+        onPressed: ()  {
           debugPrint("Download");
+          // generatePdf();
         },
       ),
       onTap: () {
@@ -180,5 +184,20 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
     for (var item in payment) {
       _api.savePayment(item);
     }
+  }
+
+  Future<void> generatePdf() async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) => pw.Center(
+          child: pw.Text('Hello World!'),
+        ),
+      ),
+    );
+
+    final file = File('example.pdf');
+    await file.writeAsBytes(await pdf.save());
   }
 }

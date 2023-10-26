@@ -8,14 +8,16 @@ part of 'consumption_model.dart';
 
 _$ConsumptionImpl _$$ConsumptionImplFromJson(Map<String, dynamic> json) =>
     _$ConsumptionImpl(
-      name: json['name'] as String,
-      sexe: json['sexe'] as String,
-      phone: json['phone'] as String,
+      counterId: json['counter_id'] as String,
+      invoiceId: json['invoice_id'] as String?,
+      power: (json['power'] as num).toDouble(),
+      unit: json['unit'] as String,
     );
 
 Map<String, dynamic> _$$ConsumptionImplToJson(_$ConsumptionImpl instance) =>
     <String, dynamic>{
-      'name': instance.name,
-      'sexe': instance.sexe,
-      'phone': instance.phone,
+      'counter_id': instance.counterId,
+      'invoice_id': instance.invoiceId,
+      'power': instance.power,
+      'unit': instance.unit,
     };

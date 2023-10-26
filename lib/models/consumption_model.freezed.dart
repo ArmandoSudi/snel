@@ -20,9 +20,14 @@ Consumption _$ConsumptionFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Consumption {
-  String get name => throw _privateConstructorUsedError;
-  String get sexe => throw _privateConstructorUsedError;
-  String get phone => throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'counter_id')
+  String get counterId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'invoice_id')
+  String? get invoiceId => throw _privateConstructorUsedError;
+  double get power => throw _privateConstructorUsedError;
+  String get unit => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +41,12 @@ abstract class $ConsumptionCopyWith<$Res> {
           Consumption value, $Res Function(Consumption) then) =
       _$ConsumptionCopyWithImpl<$Res, Consumption>;
   @useResult
-  $Res call({String name, String sexe, String phone});
+  $Res call(
+      {@JsonKey(includeFromJson: false, includeToJson: false) String? id,
+      @JsonKey(name: 'counter_id') String counterId,
+      @JsonKey(name: 'invoice_id') String? invoiceId,
+      double power,
+      String unit});
 }
 
 /// @nodoc
@@ -52,22 +62,32 @@ class _$ConsumptionCopyWithImpl<$Res, $Val extends Consumption>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
-    Object? sexe = null,
-    Object? phone = null,
+    Object? id = freezed,
+    Object? counterId = null,
+    Object? invoiceId = freezed,
+    Object? power = null,
+    Object? unit = null,
   }) {
     return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      counterId: null == counterId
+          ? _value.counterId
+          : counterId // ignore: cast_nullable_to_non_nullable
               as String,
-      sexe: null == sexe
-          ? _value.sexe
-          : sexe // ignore: cast_nullable_to_non_nullable
-              as String,
-      phone: null == phone
-          ? _value.phone
-          : phone // ignore: cast_nullable_to_non_nullable
+      invoiceId: freezed == invoiceId
+          ? _value.invoiceId
+          : invoiceId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      power: null == power
+          ? _value.power
+          : power // ignore: cast_nullable_to_non_nullable
+              as double,
+      unit: null == unit
+          ? _value.unit
+          : unit // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -81,7 +101,12 @@ abstract class _$$ConsumptionImplCopyWith<$Res>
       __$$ConsumptionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, String sexe, String phone});
+  $Res call(
+      {@JsonKey(includeFromJson: false, includeToJson: false) String? id,
+      @JsonKey(name: 'counter_id') String counterId,
+      @JsonKey(name: 'invoice_id') String? invoiceId,
+      double power,
+      String unit});
 }
 
 /// @nodoc
@@ -95,22 +120,32 @@ class __$$ConsumptionImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
-    Object? sexe = null,
-    Object? phone = null,
+    Object? id = freezed,
+    Object? counterId = null,
+    Object? invoiceId = freezed,
+    Object? power = null,
+    Object? unit = null,
   }) {
     return _then(_$ConsumptionImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      counterId: null == counterId
+          ? _value.counterId
+          : counterId // ignore: cast_nullable_to_non_nullable
               as String,
-      sexe: null == sexe
-          ? _value.sexe
-          : sexe // ignore: cast_nullable_to_non_nullable
-              as String,
-      phone: null == phone
-          ? _value.phone
-          : phone // ignore: cast_nullable_to_non_nullable
+      invoiceId: freezed == invoiceId
+          ? _value.invoiceId
+          : invoiceId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      power: null == power
+          ? _value.power
+          : power // ignore: cast_nullable_to_non_nullable
+              as double,
+      unit: null == unit
+          ? _value.unit
+          : unit // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -120,21 +155,32 @@ class __$$ConsumptionImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ConsumptionImpl implements _Consumption {
   const _$ConsumptionImpl(
-      {required this.name, required this.sexe, required this.phone});
+      {@JsonKey(includeFromJson: false, includeToJson: false) this.id,
+      @JsonKey(name: 'counter_id') required this.counterId,
+      @JsonKey(name: 'invoice_id') this.invoiceId,
+      required this.power,
+      required this.unit});
 
   factory _$ConsumptionImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsumptionImplFromJson(json);
 
   @override
-  final String name;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final String? id;
   @override
-  final String sexe;
+  @JsonKey(name: 'counter_id')
+  final String counterId;
   @override
-  final String phone;
+  @JsonKey(name: 'invoice_id')
+  final String? invoiceId;
+  @override
+  final double power;
+  @override
+  final String unit;
 
   @override
   String toString() {
-    return 'Consumption(name: $name, sexe: $sexe, phone: $phone)';
+    return 'Consumption(id: $id, counterId: $counterId, invoiceId: $invoiceId, power: $power, unit: $unit)';
   }
 
   @override
@@ -142,14 +188,19 @@ class _$ConsumptionImpl implements _Consumption {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConsumptionImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.sexe, sexe) || other.sexe == sexe) &&
-            (identical(other.phone, phone) || other.phone == phone));
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.counterId, counterId) ||
+                other.counterId == counterId) &&
+            (identical(other.invoiceId, invoiceId) ||
+                other.invoiceId == invoiceId) &&
+            (identical(other.power, power) || other.power == power) &&
+            (identical(other.unit, unit) || other.unit == unit));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, sexe, phone);
+  int get hashCode =>
+      Object.hash(runtimeType, id, counterId, invoiceId, power, unit);
 
   @JsonKey(ignore: true)
   @override
@@ -167,19 +218,28 @@ class _$ConsumptionImpl implements _Consumption {
 
 abstract class _Consumption implements Consumption {
   const factory _Consumption(
-      {required final String name,
-      required final String sexe,
-      required final String phone}) = _$ConsumptionImpl;
+      {@JsonKey(includeFromJson: false, includeToJson: false) final String? id,
+      @JsonKey(name: 'counter_id') required final String counterId,
+      @JsonKey(name: 'invoice_id') final String? invoiceId,
+      required final double power,
+      required final String unit}) = _$ConsumptionImpl;
 
   factory _Consumption.fromJson(Map<String, dynamic> json) =
       _$ConsumptionImpl.fromJson;
 
   @override
-  String get name;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? get id;
   @override
-  String get sexe;
+  @JsonKey(name: 'counter_id')
+  String get counterId;
   @override
-  String get phone;
+  @JsonKey(name: 'invoice_id')
+  String? get invoiceId;
+  @override
+  double get power;
+  @override
+  String get unit;
   @override
   @JsonKey(ignore: true)
   _$$ConsumptionImplCopyWith<_$ConsumptionImpl> get copyWith =>

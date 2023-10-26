@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/agent_model.dart';
 import '../models/client_model.dart';
+import '../models/consumption_model.dart';
 import '../models/counter_model.dart';
 import '../models/invoice_model.dart';
 import '../models/payment_model.dart';
@@ -100,6 +101,29 @@ class API {
     return _firebase.collection('clients').doc(clientId).update({
       'compteurs': FieldValue.arrayUnion([counter.toJson()])
     });
+  }
+
+  Future<void> addPowerConsumptionToCounter(Consumption consumption, String period) async {
+
+    Invoice invoice = Invoice(
+        amount: consumption.power.toInt(),
+        counterId: consumption.counterId,
+        currency: 'CDF',
+        isPaid: false,
+        period: period);
+
+    DocumentReference invoiceRef = await _firebase
+        .collection('invoices')
+        .add(invoice.toJson());
+
+    consumption = consumption.copyWith(invoiceId: invoiceRef.id);
+    
+    DocumentReference consumptionRef = await _firebase
+        .collection('consumptions')
+        .add(consumption.toJson());
+
+    print("consumptionRef.id :: ${consumptionRef.id}");
+    print("invoiceRef.id :: ${invoiceRef.id}");
   }
 
   // Get client by id from firestore

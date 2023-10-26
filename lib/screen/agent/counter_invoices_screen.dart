@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:snel/screen/agent/add_consumption_screen.dart';
 
 import '../../models/invoice_model.dart';
 import '../../service/api.dart';
@@ -18,45 +19,47 @@ class CounterInvoicesScreen extends StatefulWidget {
 }
 
 class _CounterInvoicesScreenState extends State<CounterInvoicesScreen> {
-
   final _api = API(FirebaseFirestore.instance);
   final _smsAPI = SMSService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Factures"),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-          stream: _api.getInvoicesByCounterId(widget.counterId),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text("something wen wrong");
-            }
+        appBar: AppBar(
+          title: const Text("Factures"),
+        ),
+        body: StreamBuilder<QuerySnapshot>(
+            stream: _api.getInvoicesByCounterId(widget.counterId),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text("something wen wrong");
+              }
 
-            if (snapshot.data == null ||
-                snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.data!.docs.length == 0) {
-              return const Center(
-                  child:
-                      Text("Il n'y a pas de facture pour ce compteur"));
-            }
+              if (snapshot.data == null ||
+                  snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.data!.docs.length == 0) {
+                return const Center(
+                    child: Text("Il n'y a pas de facture pour ce compteur"));
+              }
 
-            print("Invoices :: ${snapshot.data!.docs.length}");
+              print("Invoices :: ${snapshot.data!.docs.length}");
 
-            return _buildInvoiceList(context, snapshot.data?.docs ?? []);
-          }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async{
-          var message = await _smsAPI.sendSMS("+243815509291", "Test from flutter app");
-          // var message = await payInvoice();
-          log("counter invoice message:: $message");
-        },
-        child: const Icon(Icons.add),
-      )
-    );
+              return _buildInvoiceList(context, snapshot.data?.docs ?? []);
+            }),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            // var message = await _smsAPI.sendSMS("+243815509291", "Test from flutter app");
+            // var message = await payInvoice();
+            // log("counter invoice message:: $message");
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => AddConsumptionScreen(widget.counterId),
+              ),
+            );
+          },
+          child: const Icon(Icons.add),
+        ));
   }
 
   Widget _buildInvoiceList(
@@ -66,7 +69,8 @@ class _CounterInvoicesScreenState extends State<CounterInvoicesScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Text(
           "No Compteur",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+          style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
         ),
       ),
       Padding(
@@ -81,7 +85,6 @@ class _CounterInvoicesScreenState extends State<CounterInvoicesScreen> {
   }
 
   Widget _buildInvoice(BuildContext context, DocumentSnapshot data) {
-
     final Invoice invoice = Invoice.fromDocument(data);
 
     return InkWell(
@@ -129,7 +132,8 @@ class _CounterInvoicesScreenState extends State<CounterInvoicesScreen> {
   void payInvoice(Invoice invoice) async {
     // set invoice isPaid to true
     await _api.setPaidInvoice(invoice);
-    var message = await _smsAPI.sendSMS("+243815509291", "Votre facture ${invoice.id} a été payée avec succès");
+    var message = await _smsAPI.sendSMS(
+        "+243815509291", "Votre facture ${invoice.id} a été payée avec succès");
     log("counter invoice message:: $message");
   }
 }

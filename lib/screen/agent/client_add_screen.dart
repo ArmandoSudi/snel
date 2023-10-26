@@ -64,11 +64,14 @@ class _ClientAddScreenState extends State<ClientAddScreen> {
           ),
           Positioned(
             bottom: 30,
-            right: 0,
-            left: 0,
+            right: 16,
+            left: 16,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(50),
+                ),
                 onPressed: () async {
 
                   Client client = Client(

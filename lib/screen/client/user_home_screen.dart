@@ -33,7 +33,7 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
     DashboardPage(),
     const PaymentHistoryPage(),
     const UserAccountPage(),
-    const ClientListPageTwo(),
+    // const ClientListPageTwo(),
   ];
 
 
@@ -95,7 +95,7 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
       ),
       body: pages.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+        // type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
@@ -109,10 +109,10 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
             icon: Icon(Icons.person),
             label: 'Compte',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: 'Clients',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.group),
+          //   label: 'Clients',
+          // ),
         ],
         currentIndex: _selectedIndex,
         // selectedItemColor: Colors.amber[800],
